@@ -1,4 +1,4 @@
-# api.py
+# # api.py
 import enum
 import logging
 from livekit.agents import llm
@@ -14,7 +14,6 @@ class Zone(enum.Enum):
 
 class AssistantFnc(llm.ToolContext):
     def __init__(self):
-        super().__init__()
         self._temperature = {
             Zone.LIVING_ROOM: 22,
             Zone.BEDROOM: 20,
@@ -22,6 +21,12 @@ class AssistantFnc(llm.ToolContext):
             Zone.BATHROOM: 23,
             Zone.OFFICE: 21,
         }
+
+        # Pass tools during super() call
+        super().__init__(tools=[
+            self.get_temperature,
+            self.set_temperature,
+        ])
 
     @llm.function_tool(description="Get the temperature in a specific room")
     def get_temperature(self, zone: Zone):
